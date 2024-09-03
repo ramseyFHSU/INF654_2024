@@ -15,6 +15,7 @@
 
   <body class="grey lighten-4">
     <header>
+      <!-- Nav bar for Bigger screens -->
       <nav class="z-depth-0 orange lighten-4">
         <div class="nav-wrapper container">
           <a
@@ -22,7 +23,7 @@
             aria-label="Task Manager Home"
             class="brand-logo orange-text text-darken-2"
           >
-            Task<span class="font-weight-bold"> Manager</span>
+            Task<span> Manager</span>
           </a>
           <!-- Hamburger Menu for medium and small screens -->
           <a
@@ -102,7 +103,9 @@
           </div>
           <div class="col s2 right-align">
             <button class="task-delete btn-flat" aria-label="Delete task">
-              <i class="material-icons grey-text text-darken-1"
+              <i
+                class="large material-icons black-text-darken-1"
+                style="font-size: 30px"
                 >delete_outline</i
               >
             </button>
@@ -124,8 +127,10 @@
           </div>
           <div class="col s2 right-align">
             <button class="task-delete btn-flat" aria-label="Delete task">
-              <i class="material-icons grey-text text-darken-1"
-                >delete_outline</i
+              <i
+                class="material-icons black-text text-darken-1"
+                style="font-size: 30px"
+                >delete</i
               >
             </button>
           </div>
@@ -144,10 +149,10 @@
 
       <div id="side-form" class="sidenav side-form">
         <form class="add-task container section">
-          <h6>New Task</h6>
+          <h6>Add New Task</h6>
           <div class="divider"></div>
           <div class="input-field">
-            <label for="title">Task Title</label>
+            <label for="title" class="black-text">Task Title</label>
             <input
               placeholder="Enter Task title"
               id="title"
@@ -156,7 +161,7 @@
             />
           </div>
           <div class="input-field">
-            <label for="description">Task Description</label>
+            <label for="description" class="black-text">Task Description</label>
             <input
               placeholder="Enter Task description"
               id="description"
