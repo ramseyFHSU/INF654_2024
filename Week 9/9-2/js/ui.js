@@ -128,7 +128,6 @@ async function editTask(id, updatedData) {
   if (isOnline()) {
     try {
       await updateTaskInFirebase(id, updatedData);
-
       // Update in IndexedDB as well
       const tx = db.transaction("tasks", "readwrite");
       const store = tx.objectStore("tasks");
@@ -146,7 +145,6 @@ async function editTask(id, updatedData) {
     const store = tx.objectStore("tasks");
     await store.put({ ...updatedData, id: id, synced: false });
     await tx.done;
-
     loadTasks(); // Refresh the UI with loadTasks here as well
   }
 }
@@ -255,38 +253,31 @@ function displayTask(task) {
   );
 }
 
-// Add Task Button Listener
+// Add/Edit Task Button Listener
 const addTaskButton = document.querySelector("#form-action-btn");
 addTaskButton.addEventListener("click", async () => {
   const titleInput = document.querySelector("#title");
   const descriptionInput = document.querySelector("#description");
   const taskIdInput = document.querySelector("#task-id");
-
-  // Check if we're adding or editing a task
-  const taskId = taskIdInput.value;
-
+  const formActionButton = document.querySelector("#form-action-btn");
+  // Prepare the task data
+  const taskId = taskIdInput.value; // If editing, this will have a value
+  const taskData = {
+    title: titleInput.value,
+    description: descriptionInput.value,
+    status: "pending",
+  };
   if (!taskId) {
-    // Adding a new task
-    const task = {
-      title: titleInput.value,
-      description: descriptionInput.value,
-      status: "pending",
-    };
-
-    const savedTask = await addTask(task); // Add task and get task with ID
-    displayTask(savedTask); // Display task in UI with correct ID
+    // If no taskId, we are adding a new task
+    const savedTask = await addTask(taskData);
+    displayTask(savedTask); // Display new task in the UI
   } else {
-    // Editing an existing task
-    const updatedTask = {
-      title: titleInput.value,
-      description: descriptionInput.value,
-      status: "pending",
-    };
-    await editTask(taskId, updatedTask); // Edit task in the database
-    loadTasks(); // Reload tasks to show updated data
+    // If taskId exists, we are editing an existing task
+    await editTask(taskId, taskData); // Edit task in Firebase and IndexedDB
+    loadTasks(); // Refresh task list to show updated data
   }
-
-  // Close the form and reset it to add mode
+  // Reset the button text and close the form
+  formActionButton.textContent = "Add";
   closeForm();
 });
 
@@ -296,22 +287,16 @@ function openEditForm(id, title, description) {
   const descriptionInput = document.querySelector("#description");
   const taskIdInput = document.querySelector("#task-id");
   const formActionButton = document.querySelector("#form-action-btn");
+
+  // Fill in the form with existing task data
   titleInput.value = title;
   descriptionInput.value = description;
-  taskIdInput.value = id;
-  M.updateTextFields();
-  formActionButton.textContent = "Edit";
-  formActionButton.onclick = async () => {
-    const updatedTask = {
-      title: titleInput.value,
-      description: descriptionInput.value,
-      status: "pending",
-    };
+  taskIdInput.value = id; // Set taskId for the edit operation
+  formActionButton.textContent = "Edit"; // Change the button text to "Edit"
 
-    await editTask(id, updatedTask);
-    loadTasks();
-    closeForm();
-  };
+  M.updateTextFields(); // Materialize CSS form update
+
+  // Open the side form
   const forms = document.querySelector(".side-form");
   const instance = M.Sidenav.getInstance(forms);
   instance.open();
