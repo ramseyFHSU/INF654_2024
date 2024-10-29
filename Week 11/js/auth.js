@@ -1,16 +1,9 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { auth } from "./firebaseConfig.js";
 import {
-  getAuth,
   onAuthStateChanged,
   signOut,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-
-// Firebase configuration
-import { firebaseConfig } from "./firebaseConfig.js";
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+import { loadTasks } from "./ui.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logout-btn");
@@ -22,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("User ID: ", user.uid);
       console.log("Email: ", user.email);
       logoutBtn.style.display = "block";
+      loadTasks();
     } else {
       // No user is signed in.
       console.log("No user is currently signed in.");
