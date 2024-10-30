@@ -1,18 +1,33 @@
-// Import the functions you need from the Firebase SDK
+import { currentUser } from "./auth.js";
 import { db } from "./firebaseConfig.js";
 import {
   collection,
   addDoc,
+  setDoc,
   getDocs,
   deleteDoc,
   updateDoc,
   doc,
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 // Add a task
 export async function addTaskToFirebase(task) {
   try {
-    const docRef = await addDoc(collection(db, "tasks"), task);
+    if (!currentUser) {
+      throw new Error("User is not authenticated");
+    }
+    const userId = currentUser.uid;
+    console.log("userID: ", userId);
+    const userRef = doc(db, "users", userId);
+    await setDoc(
+      userRef,
+      {
+        email: currentUser.email,
+      },
+      { merge: true }
+    );
+    const tasksRef = collection(userRef, "tasks");
+    const docRef = await addDoc(tasksRef, task);
     return { id: docRef.id, ...task };
   } catch (e) {
     console.error("Error adding task: ", e);
@@ -22,7 +37,12 @@ export async function addTaskToFirebase(task) {
 export async function getTasksFromFirebase() {
   const tasks = [];
   try {
-    const querySnapshot = await getDocs(collection(db, "tasks"));
+    if (!currentUser) {
+      throw new Error("User is not authenticated");
+    }
+    const userId = currentUser.uid;
+    const taskRef = collection(doc(db, "users", userId), "tasks");
+    const querySnapshot = await getDocs(taskRef);
     querySnapshot.forEach((doc) => {
       tasks.push({ id: doc.id, ...doc.data() });
     });
@@ -34,7 +54,11 @@ export async function getTasksFromFirebase() {
 
 export async function deleteTaskFromFirebase(id) {
   try {
-    await deleteDoc(doc(db, "tasks", id));
+    if (!currentUser) {
+      throw new Error("User is not authenticated");
+    }
+    const userId = currentUser.uid;
+    await deleteDoc(doc(db, "users", userId, "tasks", id));
   } catch (e) {
     console.error("Error deleting task: ", e);
   }
@@ -43,8 +67,11 @@ export async function deleteTaskFromFirebase(id) {
 export async function updateTaskInFirebase(id, updatedData) {
   console.log(updatedData, id);
   try {
-    const taskRef = doc(db, "tasks", id);
-    console.log(taskRef);
+    if (!currentUser) {
+      throw new Error("User is not authenticated");
+    }
+    const userId = currentUser.uid;
+    const taskRef = doc(db, "users", userId, "tasks", id);
     await updateDoc(taskRef, updatedData);
   } catch (e) {
     console.error("Error updating task: ", e);

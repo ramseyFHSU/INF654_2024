@@ -1,20 +1,18 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
-// Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCoTf1QUWYmg7uCypPNnxfgHYPH7qCRRB4",
-  authDomain: "task-manager-d46b2.firebaseapp.com",
-  projectId: "task-manager-d46b2",
-  storageBucket: "task-manager-d46b2.appspot.com",
-  messagingSenderId: "680074188522",
-  appId: "1:680074188522:web:a06190b0faeec91359e993",
+  apiKey: "AIzaSyCq_ss2DfJPgJxG096h7yYudgB_KcS4mvI",
+  authDomain: "taskmanager-f8b23.firebaseapp.com",
+  projectId: "taskmanager-f8b23",
+  storageBucket: "taskmanager-f8b23.appspot.com",
+  messagingSenderId: "1072082620996",
+  appId: "1:1072082620996:web:70b432bb54f9979c4b2211",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-export { auth, db };
+export { db, auth };

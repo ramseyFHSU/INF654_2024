@@ -1,12 +1,11 @@
-// Import the functions you need from the SDKs you need
-import { db, auth } from "./firebaseConfig.js";
+import { auth } from "./firebaseConfig.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import {
-  setDoc,
   doc,
+  setDoc,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const showSignIn = document.getElementById("show-signin");
   const signInBtn = document.getElementById("sign-in-btn");
   const SignUpBtn = document.getElementById("sign-up-btn");
+  console.log(signInBtn);
 
   showSignIn.addEventListener("click", () => {
     signUpForm.style.display = "none";
@@ -36,12 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
         email,
         password
       );
-      console.log(authCredential.user);
       const docRef = doc(db, "users", authCredential.user.uid);
-      console.log(docRef);
-      await setDoc(docRef, {
-        email: email,
-      });
+      await setDoc(docRef, { email: email });
       M.toast({ html: "Sign up successful!" });
       window.location.href = "/";
       signUpForm.style.display = "none";

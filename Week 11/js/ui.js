@@ -15,10 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
   M.Sidenav.init(menus, { edge: "right" });
   const forms = document.querySelector(".side-form");
   M.Sidenav.init(forms, { edge: "left" });
-
-  // Load tasks from IndexedDB and sync with Firebase
-  loadTasks();
-  syncTasks();
   checkStorageUsage();
   requestPersistentStorage();
 });
@@ -52,7 +48,7 @@ async function getDB() {
 }
 
 // Sync unsynced tasks from IndexedDB to Firebase
-async function syncTasks() {
+export async function syncTasks() {
   const db = await getDB();
   const tx = db.transaction("tasks", "readonly");
   const store = tx.objectStore("tasks");
