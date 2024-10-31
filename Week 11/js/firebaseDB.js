@@ -23,6 +23,7 @@ export async function addTaskToFirebase(task) {
       userRef,
       {
         email: currentUser.email,
+        name: currentUser.displayName,
       },
       { merge: true }
     );

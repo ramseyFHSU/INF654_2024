@@ -9,7 +9,7 @@ export let currentUser = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logout-btn");
-  console.log(logoutBtn);
+
   // Check if the user is authenticated
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -17,7 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
       currentUser = user;
       console.log("User ID: ", user.uid);
       console.log("Email: ", user.email);
-      logoutBtn.style.display = "block";
+      console.log("name: ", user.name);
+
+      if (logoutBtn) {
+        logoutBtn.style.display = "block";
+      }
       loadTasks();
       syncTasks();
     } else {
@@ -27,15 +31,18 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "/pages/auth.html";
     }
   });
+
   // Handle logout functionality
-  logoutBtn.addEventListener("click", async () => {
-    try {
-      await signOut(auth);
-      M.toast({ html: "Logout successful!" });
-      logoutBtn.style.display = "none";
-      window.location.href = "/pages/auth.html";
-    } catch (error) {
-      M.toast({ html: error.message });
-    }
-  });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        M.toast({ html: "Logout successful!" });
+        logoutBtn.style.display = "none";
+        window.location.href = "/pages/auth.html";
+      } catch (error) {
+        M.toast({ html: error.message });
+      }
+    });
+  }
 });

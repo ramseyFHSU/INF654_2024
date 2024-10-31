@@ -1,10 +1,11 @@
-const CACHE_NAME = "task-manager-v4";
+const CACHE_NAME = "task-manager-v5";
 
 const ASSETS_TO_CACHE = [
   "/",
   "/index.html",
   "/pages/about.html",
   "/pages/contact.html",
+  "/pages/profile.html",
   "/pages/auth.html",
   "/css/materialize.min.css",
   "/js/materialize.min.js",

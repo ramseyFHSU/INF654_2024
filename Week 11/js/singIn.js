@@ -1,7 +1,8 @@
-import { auth } from "./firebaseConfig.js";
+import { auth, db } from "./firebaseConfig.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import {
   doc,
@@ -28,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   SignUpBtn.addEventListener("click", async () => {
+    const name = document.getElementById("sign-up-name").value;
     const email = document.getElementById("sign-up-email").value;
     const password = document.getElementById("sign-up-password").value;
     try {
@@ -36,8 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
         email,
         password
       );
+      await updateProfile(authCredential.user, {
+        displayName: name,
+      });
       const docRef = doc(db, "users", authCredential.user.uid);
-      await setDoc(docRef, { email: email });
+      const userProperties = await setDoc(docRef, {
+        email: email,
+        name: name,
+      });
+
+      console.log(userProperties);
       M.toast({ html: "Sign up successful!" });
       window.location.href = "/";
       signUpForm.style.display = "none";
